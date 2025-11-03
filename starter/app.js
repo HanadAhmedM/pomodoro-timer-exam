@@ -1,12 +1,12 @@
-// Pomodoro Timer - US1a: Starta timern (med hundradelar)
-
 let timerDisplay = document.getElementById('timer');
 let startButton = document.getElementById('start-btn');
+let pauseButton = document.getElementById('pause-btn');
 
-let timer; // intervallet
-let timeLeft = 25 * 60 * 1000; // 25 minuter i millisekunder
+let timer; // interval variable
+let timeLeft = 25 * 60 * 1000; // 25 minutes in ms
 let isRunning = false;
 
+// Update timer display in mm:ss.hh
 function updateDisplay() {
   const totalSeconds = Math.floor(timeLeft / 1000);
   const minutes = Math.floor(totalSeconds / 60);
@@ -19,29 +19,56 @@ function updateDisplay() {
     `${hundredths.toString().padStart(2, '0')}`;
 }
 
+// Start or resume timer
 function startTimer() {
   if (isRunning) return;
   isRunning = true;
 
-  const interval = 10; // uppdatera var 10:e ms = hundradelar
-  const startTime = Date.now();
+  // Swap buttons
+  startButton.style.display = "none";
+  pauseButton.style.display = "inline-block";
+  pauseButton.textContent = "Pausa";
+
+  const interval = 10; // 10ms for hundredths
+  let previous = Date.now();
 
   timer = setInterval(() => {
-    const elapsed = Date.now() - startTime;
-    timeLeft -= interval;
-    updateDisplay();
+    const now = Date.now();
+    const delta = now - previous;
+    previous = now;
 
+    timeLeft -= delta;
     if (timeLeft <= 0) {
+      timeLeft = 0;
       clearInterval(timer);
       isRunning = false;
-      timeLeft = 0;
-      updateDisplay();
       alert("Pass klart!");
+      // Reset buttons
+      startButton.style.display = "inline-block";
+      pauseButton.style.display = "none";
     }
+    updateDisplay();
   }, interval);
 }
 
+// Pause timer
+function pauseTimer() {
+  if (!isRunning) return;
+  clearInterval(timer);
+  isRunning = false;
+}
+
+// Event listeners
 startButton.addEventListener('click', startTimer);
 
-// Initiera displayen
+pauseButton.addEventListener('click', () => {
+  if (isRunning) {
+    pauseTimer();
+    pauseButton.textContent = "Fortsätt";
+  } else {
+    startTimer();
+  }
+});
+
+// Init display
 updateDisplay();
