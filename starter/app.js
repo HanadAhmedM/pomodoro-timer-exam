@@ -5,7 +5,8 @@ let pauseButton = document.getElementById('pause-btn');
 let timer; // interval variable
 let timeLeft = 25 * 60 * 1000; // 25 minutes in ms
 let isRunning = false;
-
+let resetButton = document.getElementById('reset-btn');
+const initialTime = 25 * 60 * 1000; // 25 min default
 // Update timer display in mm:ss.hh
 function updateDisplay() {
   const totalSeconds = Math.floor(timeLeft / 1000);
@@ -28,7 +29,7 @@ function startTimer() {
   startButton.style.display = "none";
   pauseButton.style.display = "inline-block";
   pauseButton.textContent = "Pausa";
-
+  resetButton.style.display = "inline-block";
   const interval = 10; // 10ms for hundredths
   let previous = Date.now();
 
@@ -69,6 +70,19 @@ pauseButton.addEventListener('click', () => {
     startTimer();
   }
 });
-
+resetButton.addEventListener('click', resetTimer);
+function resetTimer() {
+    clearInterval(timer);
+    isRunning = false;
+    timeLeft = initialTime;
+    updateDisplay();
+  
+    // Visa bara Starta-knappen igen, dölj andra
+    startButton.style.display = "inline-block";
+    pauseButton.style.display = "none";
+    resetButton.style.display = "none";
+    pauseButton.textContent = "Pausa";
+  }
+  
 // Init display
 updateDisplay();
