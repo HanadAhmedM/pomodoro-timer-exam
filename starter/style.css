@@ -1,40 +1,62 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f7f5f2;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    background: #fef2f2;
   }
   
   .container {
     text-align: center;
-    background: #fff;
-    padding: 2rem;
-    border-radius: 16px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
   }
   
-  #timer {
-    font-size: 3rem;
-    margin: 1rem 0;
+  .timer-container {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: 20px auto;
+  }
+  
+  .progress-ring__bg {
+    fill: transparent;
+    stroke: #fcd5d5;
+    stroke-linecap: round;
+  }
+  
+  .progress-ring__circle {
+    fill: transparent;
+    stroke: url(#focusGradient);
+    stroke-linecap: round;
+    stroke-dasharray: 439.82;
+    stroke-dashoffset: 0;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+  }
+  
+  .timer-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+  }
+  
+  .timer-text #timer {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .buttons {
+    margin-top: 20px;
   }
   
   button {
-    background-color: #ff4b4b;
-    color: white;
-    border: none;
-    padding: 0.8rem 1.2rem;
-    border-radius: 8px;
+    margin: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
     cursor: pointer;
   }
   
-  button:hover {
-    background-color: #e63e3e;
-  }
-  #timer {
-    font-size: 3.5rem;
-    letter-spacing: 1px;
-    font-weight: bold;
-  }
