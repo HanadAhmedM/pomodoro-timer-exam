@@ -9,18 +9,33 @@
 <body>
   <div class="container">
     <h1>Pomodoro Timer</h1>
-    <!-- Main Pomodoro timer -->
-    <div id="timer">25:00</div>
-
-    <!-- Control buttons -->
-    <button id="start-btn">Starta</button>
-    <button id="pause-btn" style="display:none">Pausa</button>
-    <button id="reset-btn" style="display:none">Återställ</button>
-
-    <!-- Break timer display -->
-    <div id="break-timer" style="display:none">00:30</div>
+    <div class="timer-container">
+      <div class="progress-ring">
+        <svg width="160" height="160">
+          <defs>
+            <linearGradient id="focusGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ef4444"/>
+              <stop offset="100%" stop-color="#fca5a5"/>
+            </linearGradient>
+            <linearGradient id="breakGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#22c55e"/>
+              <stop offset="100%" stop-color="#bbf7d0"/>
+            </linearGradient>
+          </defs>
+          <circle class="progress-ring__bg" r="70" cx="80" cy="80" stroke-width="10"/>
+          <circle class="progress-ring__circle" r="70" cx="80" cy="80" stroke-width="10"/>
+        </svg>
+        <div class="timer-text">
+          <span id="session-label">Fokus</span>
+          <span id="timer">25:00</span>
+        </div>
+      </div>
+    </div>
+    <div class="buttons">
+      <button id="control-btn">Starta</button>
+      <button id="reset-btn">Återställ</button>
+    </div>
   </div>
-
   <script src="app.js"></script>
 </body>
 </html>

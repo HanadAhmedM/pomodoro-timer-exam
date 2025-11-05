@@ -1,162 +1,124 @@
-// -------------------------
-// VARIABLES
-// -------------------------
-const timerDisplay = document.getElementById('timer');
-const startButton = document.getElementById('start-btn');
-const pauseButton = document.getElementById('pause-btn');
-const resetButton = document.getElementById('reset-btn');
-const breakTimerDisplay = document.getElementById('break-timer');
+// Elements
+const timerDisplay = document.getElementById("timer");
+const sessionLabel = document.getElementById("session-label");
+const controlButton = document.getElementById("control-btn");
+const resetButton = document.getElementById("reset-btn");
+const circle = document.querySelector(".progress-ring__circle");
+const circleBg = document.querySelector(".progress-ring__bg");
 
-let timer = null;
-let timeLeft = 25 * 60 * 1000; // 25 min
-const initialTime = 25 * 60 * 1000;
+// Circle
+const FULL_DASH_ARRAY = 439.82;
+
+// Times in seconds
+const FOCUS_TIME = 25 * 60; // 25 minutes
+const BREAK_TIME = 30;      // 30 seconds
+
+let timeLeft = FOCUS_TIME;
+let timerInterval = null;
 let isRunning = false;
+let onBreak = false;
+let pausedFocusTime = 0;
 
-let breakInterval = null;
-let breakTime = 30 * 1000; // 30 sec
-let breakRemaining = breakTime;
-
-// -------------------------
-// UPDATE DISPLAY
-// -------------------------
-function updateDisplay() {
-  const totalSeconds = Math.floor(timeLeft / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  const hundredths = Math.floor((timeLeft % 1000) / 10);
-
-  timerDisplay.textContent =
-    `${minutes.toString().padStart(2,'0')}:` +
-    `${seconds.toString().padStart(2,'0')}.` +
-    `${hundredths.toString().padStart(2,'0')}`;
+// Format time mm:ss
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
 }
 
-// -------------------------
-// POMODORO TIMER
-// -------------------------
+// Update circle visual
+function updateCircle() {
+  const total = onBreak ? BREAK_TIME : FOCUS_TIME;
+  const percentage = timeLeft / total;
+  const offset = FULL_DASH_ARRAY * (1 - percentage);
+  circle.style.strokeDashoffset = offset;
+  circle.style.transition = "stroke-dashoffset 0.1s linear";
+
+  if (onBreak) {
+    circle.style.stroke = "url(#breakGradient)";
+    circleBg.style.stroke = "#bbf7d0";
+  } else {
+    circle.style.stroke = "url(#focusGradient)";
+    circleBg.style.stroke = "#fcd5d5";
+  }
+}
+
+// Update timer display
+function updateDisplay() {
+  timerDisplay.textContent = formatTime(Math.ceil(timeLeft));
+  sessionLabel.textContent = onBreak ? "Paus" : "Fokus";
+  updateCircle();
+}
+
+// Start timer
 function startTimer() {
   if (isRunning) return;
   isRunning = true;
+  controlButton.textContent = "Pausa";
 
-  startButton.style.display = 'none';
-  pauseButton.style.display = 'inline-block';
-  pauseButton.textContent = 'Pausa';
-  resetButton.style.display = 'inline-block';
+  let previousTimestamp = Date.now();
 
-  let previous = Date.now();
-  const interval = 10;
-
-  timer = setInterval(() => {
+  timerInterval = setInterval(() => {
     const now = Date.now();
-    const delta = now - previous;
-    previous = now;
+    const delta = (now - previousTimestamp) / 1000;
+    previousTimestamp = now;
 
     timeLeft -= delta;
-
-    if (timeLeft <= 0) {
-      timeLeft = 0;
-      clearInterval(timer);
-      isRunning = false;
-      // Automatically start break when Pomodoro ends
-      startBreak();
-    }
+    if (timeLeft < 0) timeLeft = 0;
 
     updateDisplay();
-  }, interval);
-}
 
-function pauseTimer() {
-  if (!isRunning) return;
-  clearInterval(timer);
-  isRunning = false;
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      isRunning = false;
 
-  // Automatically start break on pause
-  startBreak();
-}
-
-// -------------------------
-// BREAK TIMER
-// -------------------------
-function startBreak() {
-  breakTimerDisplay.style.display = 'block';
-  breakRemaining = breakTime;
-
-  let previous = Date.now();
-
-  breakInterval = setInterval(() => {
-    const now = Date.now();
-    const delta = now - previous;
-    previous = now;
-    breakRemaining -= delta;
-
-    if (breakRemaining <= 0) {
-      clearInterval(breakInterval);
-      breakInterval = null;
-      breakRemaining = 0;
-      breakTimerDisplay.textContent = 'PAUS KLAR!';
-      breakTimerDisplay.style.color = 'green';
-      startButton.style.display = 'inline-block';
-      pauseButton.style.display = 'none';
-      resetButton.style.display = 'none';
-      timeLeft = initialTime;
-      timerDisplay.textContent = '25:00';
-    } else {
-      const minutes = Math.floor(breakRemaining / 60000);
-      const seconds = Math.floor((breakRemaining % 60000) / 1000);
-      breakTimerDisplay.textContent =
-        `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+      if (onBreak) {
+        // Break finished → back to paused focus
+        onBreak = false;
+        timeLeft = pausedFocusTime;
+        pausedFocusTime = 0;
+        controlButton.textContent = "Fortsätt"; // wait for user
+      }
     }
   }, 100);
 }
 
-// -------------------------
-// RESET TIMER
-// -------------------------
-function resetTimer() {
-  // Stop Pomodoro
-  clearInterval(timer);
+// Pause → start break automatically
+function pauseTimer() {
+  if (!isRunning) return;
+  clearInterval(timerInterval);
   isRunning = false;
-  timeLeft = initialTime;
-  updateDisplay();
 
-  // Stop break if running
-  if (breakInterval) {
-    clearInterval(breakInterval);
-    breakInterval = null;
+  if (!onBreak) {
+    pausedFocusTime = timeLeft;
+    onBreak = true;
+    timeLeft = BREAK_TIME;
+    startTimer();
+    controlButton.textContent = "Fortsätt"; // to continue focus after break
   }
-  breakTimerDisplay.style.display = 'none';
-
-  // Reset buttons
-  startButton.style.display = 'inline-block';
-  pauseButton.style.display = 'none';
-  resetButton.style.display = 'none';
-  pauseButton.textContent = 'Pausa';
 }
 
-// -------------------------
-// EVENT LISTENERS
-// -------------------------
-startButton.addEventListener('click', startTimer);
-
-pauseButton.addEventListener('click', () => {
-  if (isRunning) {
-    // Pause Pomodoro and start break automatically
-    pauseTimer();
-    pauseButton.textContent = 'Fortsätt';
-  } else {
-    // Fortsätt clicked → hide break and resume Pomodoro
-    if (breakInterval) {
-      clearInterval(breakInterval);
-      breakInterval = null;
-    }
-    breakTimerDisplay.style.display = 'none';
+// Control button click
+controlButton.addEventListener("click", () => {
+  if (!isRunning && controlButton.textContent === "Starta") {
     startTimer();
+  } else if (isRunning && controlButton.textContent === "Pausa") {
+    pauseTimer();
+  } else if (!isRunning && controlButton.textContent === "Fortsätt") {
+    startTimer(); // continue original focus
   }
 });
 
-resetButton.addEventListener('click', resetTimer);
+// Reset button
+resetButton.addEventListener("click", () => {
+  clearInterval(timerInterval);
+  isRunning = false;
+  onBreak = false;
+  timeLeft = FOCUS_TIME;
+  pausedFocusTime = 0;
+  updateDisplay();
+  controlButton.textContent = "Starta";
+});
 
-// -------------------------
-// INIT
-// -------------------------
+// Initialize
 updateDisplay();
