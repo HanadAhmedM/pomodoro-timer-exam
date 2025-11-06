@@ -1,4 +1,4 @@
-// Elements
+// --- Elements ---
 const timerDisplay = document.getElementById("timer");
 const sessionLabel = document.getElementById("session-label");
 const controlButton = document.getElementById("control-btn");
@@ -6,27 +6,29 @@ const resetButton = document.getElementById("reset-btn");
 const circle = document.querySelector(".progress-ring__circle");
 const circleBg = document.querySelector(".progress-ring__bg");
 
-// Circle
+// --- Circle Setup ---
 const FULL_DASH_ARRAY = 439.82;
 
-// Times in seconds
+// --- Time Settings (in seconds) ---
 const FOCUS_TIME = 25 * 60; // 25 minutes
 const BREAK_TIME = 30;      // 30 seconds
 
+// --- State Variables ---
 let timeLeft = FOCUS_TIME;
 let timerInterval = null;
 let isRunning = false;
 let onBreak = false;
 let pausedFocusTime = 0;
+let alarmSound = null; // 🔔 håller referens till ljudet
 
-// Format time mm:ss
+// --- Format time as mm:ss ---
 function formatTime(seconds) {
   const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
+  const secs = Math.floor(seconds % 60);
   return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
 }
 
-// Update circle visual
+// --- Update Circle Visual ---
 function updateCircle() {
   const total = onBreak ? BREAK_TIME : FOCUS_TIME;
   const percentage = timeLeft / total;
@@ -36,21 +38,21 @@ function updateCircle() {
 
   if (onBreak) {
     circle.style.stroke = "url(#breakGradient)";
-    circleBg.style.stroke = "#bbf7d0";
+    circleBg.style.stroke = "#bbf7d0"; // ljusgrön bakgrund
   } else {
     circle.style.stroke = "url(#focusGradient)";
-    circleBg.style.stroke = "#fcd5d5";
+    circleBg.style.stroke = "#fcd5d5"; // ljusröd bakgrund
   }
 }
 
-// Update timer display
+// --- Update Timer Display ---
 function updateDisplay() {
   timerDisplay.textContent = formatTime(Math.ceil(timeLeft));
   sessionLabel.textContent = onBreak ? "Paus" : "Fokus";
   updateCircle();
 }
 
-// Start timer
+// --- Start Timer ---
 function startTimer() {
   if (isRunning) return;
   isRunning = true;
@@ -73,17 +75,18 @@ function startTimer() {
       isRunning = false;
 
       if (onBreak) {
-        // Break finished → back to paused focus
+        // 🔔 När pausen är slut → gå tillbaka till fokusläge, vänta på fortsättning
         onBreak = false;
         timeLeft = pausedFocusTime;
         pausedFocusTime = 0;
-        controlButton.textContent = "Fortsätt"; // wait for user
+        controlButton.textContent = "Fortsätt";
+        playAlarm(); // spela alarmet när pausen tar slut
       }
     }
   }, 100);
 }
 
-// Pause → start break automatically
+// --- Pause Timer (startar break automatiskt) ---
 function pauseTimer() {
   if (!isRunning) return;
   clearInterval(timerInterval);
@@ -94,24 +97,43 @@ function pauseTimer() {
     onBreak = true;
     timeLeft = BREAK_TIME;
     startTimer();
-    controlButton.textContent = "Fortsätt"; // to continue focus after break
+    controlButton.textContent = "Fortsätt"; // kommer användas efter break
   }
 }
 
-// Control button click
+// --- Alarm Functions ---
+function playAlarm() {
+  alarmSound = new Audio("assets/sounds/816657__jw_audio__scialrm_alarm-repeat-high-pitched-danger-warning-_01_jw-audio_a1.wav");
+  alarmSound.loop = true;
+  alarmSound.play().catch(() => {
+    alert("🔔 Pausen är slut! (Ljudet kunde inte spelas)");
+  });
+}
+
+function stopAlarm() {
+  if (alarmSound) {
+    alarmSound.pause();
+    alarmSound.currentTime = 0;
+    alarmSound = null;
+  }
+}
+
+// --- Control Button ---
 controlButton.addEventListener("click", () => {
   if (!isRunning && controlButton.textContent === "Starta") {
     startTimer();
   } else if (isRunning && controlButton.textContent === "Pausa") {
     pauseTimer();
   } else if (!isRunning && controlButton.textContent === "Fortsätt") {
-    startTimer(); // continue original focus
+    stopAlarm(); // 🛑 stoppa alarmet
+    startTimer(); // fortsätt fokus
   }
 });
 
-// Reset button
+// --- Reset Button ---
 resetButton.addEventListener("click", () => {
   clearInterval(timerInterval);
+  stopAlarm(); // 🛑 stoppa ljudet om det spelar
   isRunning = false;
   onBreak = false;
   timeLeft = FOCUS_TIME;
@@ -120,5 +142,5 @@ resetButton.addEventListener("click", () => {
   controlButton.textContent = "Starta";
 });
 
-// Initialize
+// --- Initialize ---
 updateDisplay();
