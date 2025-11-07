@@ -15,7 +15,7 @@ A web-based Pomodoro Timer with focus sessions and short breaks, featuring a cir
 - [Kom igång](#kom-igång)
 - [PR Reviews](#pr-reviews)
 - [Konflikter](#konflikter)
-- [User Stories](#user-stories)
+
 
 ---
 
@@ -60,15 +60,15 @@ This project was created for the MU25 course to demonstrate full Git workflow, A
 ## PR Reviews
 Given:
 
--Review 1: PR  – (https://github.com/VitaliyBeletskiy/mu25-git-agile-bookmarks-mini/pull/3)
+- Review 1: PR  – (https://github.com/VitaliyBeletskiy/mu25-git-agile-bookmarks-mini/pull/3)
 
 - Review 2: PR  – (https://github.com/VitaliyBeletskiy/mu25-git-agile-bookmarks-mini/pull/4#pullrequestreview-3417026003)
 
 Mottagen:
 
-- Review 1: PR1 # – (https://github.com/HanadAhmedM/pomodoro-timer-exam/pull/1)
+- Review 1: PR1  – (https://github.com/HanadAhmedM/pomodoro-timer-exam/pull/1)
+- Review 2: PR2  – (https://github.com/HanadAhmedM/pomodoro-timer-exam/pull/2)
 
-Review 2: PR2 # – (https://github.com/HanadAhmedM/pomodoro-timer-exam/pull/2)
 ---
 ## Konflikter
 - (https://github.com/HanadAhmedM/pomodoro-timer-exam/pull/6)
