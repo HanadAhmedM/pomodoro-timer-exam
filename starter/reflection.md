@@ -1,77 +1,120 @@
-🧠 Reflektion – Git & Agilt
-1️⃣ Egen User Story + Acceptance Criteria + INVEST
-User Story – US6: Alarm vid pausens slut
+# 🧠 Reflektion – Git & Agilt
 
-Som användare vill jag höra ett alarm när pausen är slut
+## 1️⃣ Egen User Story + Acceptance Criteria + INVEST
+
+### **User Story – US6: Alarm vid pausens slut**
+Som användare vill jag höra ett alarm när pausen är slut  
 så att jag vet när jag kan fortsätta mitt fokuspass utan att titta på skärmen.
 
-Acceptance Criteria (AC):
+---
 
-✅ När paus-timern tar slut spelas ett ljud.
-✅ Alarmet fortsätter tills användaren klickar på “Fortsätt” eller “Återställ”.
-✅ Alarmet fungerar både på dator och mobil.
-✅ Ljudfilen finns i assets/sounds/.
-✅ PR skapad med titel: feat(us6-break-alarm): play sound when break ends.
+### ✅ **Acceptance Criteria (AC)**
 
-INVEST – Kort motivering
+- När paus-timern tar slut spelas ett ljud.  
+- Alarmet fortsätter tills användaren klickar på **“Fortsätt”** eller **“Återställ”**.  
+- Alarmet fungerar både på dator och mobil.  
+- Ljudfilen finns i `assets/sounds/`.  
+- PR skapad med titel: `feat(us6-break-alarm): play sound when break ends`.
 
-Independent:
-Storyn är oberoende – den påverkar inte tidigare logik för fokus eller paus, utan bygger vidare på befintligt flöde.
+---
 
-Negotiable:
-Implementation av alarmet (t.ex. typ av ljud, längd, metod) kunde diskuteras och ändras utan att kravet ändrades.
+### 🧩 **INVEST – Kort motivering**
 
-Valuable:
-Ger användaren tydlig feedback när pausen är över, vilket ökar nyttan och användarvänligheten.
+**Independent:**  
+Storyn är oberoende – den påverkar inte tidigare logik för fokus eller paus, utan bygger vidare på befintligt flöde.  
 
-Estimable:
-Lätt att uppskatta arbetet (en ny funktion med ljudfil och eventhantering).
+**Negotiable:**  
+Implementation av alarmet (typ av ljud, längd, metod) kunde diskuteras och ändras utan att kravet ändrades.  
 
-Small:
-Tillräckligt liten för att utvecklas och testas under en sprint.
+**Valuable:**  
+Ger användaren tydlig feedback när pausen är över, vilket ökar nyttan och användarvänligheten.  
 
-Testable:
+**Estimable:**  
+Lätt att uppskatta arbetet (en ny funktion med ljudfil och eventhantering).  
+
+**Small:**  
+Tillräckligt liten för att utvecklas och testas under en sprint.  
+
+**Testable:**  
 Går att verifiera – alarmet ska spelas och stoppas vid “Fortsätt” eller “Återställ”.
 
-2️⃣ Sprintmål + Definition of Done (DoD)
-Sprintmål:
+---
 
+## 2️⃣ Sprintmål + Definition of Done (DoD)
+
+### 🎯 **Sprintmål**
 Att förbättra användarupplevelsen genom att lägga till ett ljudlarm vid slutet av pausen och se till att timern är visuellt motiverande och fullt fungerande.
 
-Definition of Done (DoD):
+---
 
-☑️ Koden kör utan fel i webbläsaren.
-☑️ Alarm ljuder vid pausens slut och stannar korrekt.
-☑️ PR granskad och godkänd innan merge.
-☑️ README uppdaterad med ljudfunktion.
-☑️ Trello-kort länkat och markerat som “Done”.
-☑️ Endast en commit i main efter squash & merge.
+### ✅ **Definition of Done (DoD)**
 
-3️⃣ Retrospektiv – Start / Stop / Continue
+- [x] Koden kör utan fel i webbläsaren  
+- [x] Alarm ljuder vid pausens slut och stannar korrekt  
+- [x] PR granskad och godkänd innan merge  
+- [x] README uppdaterad med ljudfunktion  
+- [x] Trello-kort länkat och markerat som “Done”  
+- [x] Endast en commit i `main` efter squash & merge  
 
-Start:
-💡 Börja skriva tydligare PR-beskrivningar med “Varför” och “Hur” samt länka till Trello varje gång.
+---
 
-Stop:
-🛑 Sluta pusha stora PR:er som innehåller flera features – det gör review svårare och ökar risk för konflikter.
+## 3️⃣ Retrospektiv – Start / Stop / Continue
 
-Continue:
-✅ Fortsätta med branch-struktur feat/usX-... och tydliga commitmeddelanden.
+**Start:**  
+💡 Börja skriva tydligare PR-beskrivningar med *“Varför”* och *“Hur”* samt länka till Trello varje gång.  
 
-Konkreta förbättringar nästa sprint
+**Stop:**  
+🛑 Sluta pusha stora PR:er som innehåller flera features – det gör review svårare och ökar risk för konflikter.  
 
-Jag kommer att:
+**Continue:**  
+✅ Fortsätta med branch-struktur `feat/usX-...` och tydliga commit-meddelanden.  
 
-Implementera automatisk test för timer-logik i nästa sprint för att upptäcka buggar snabbare.
+---
 
-Förbättra UI-feedback genom att visa en visuell signal (blink eller färgskift) tillsammans med ljudet.
+### 🔁 **Konkreta förbättringar nästa sprint**
 
-Detta ska göra timern ännu mer tillgänglig och pålitlig.
+- Implementera automatisk test för timer-logik i nästa sprint för att upptäcka buggar snabbare.  
+- Förbättra UI-feedback genom att visa en visuell signal (blink eller färgskift) tillsammans med ljudet.  
 
-4️⃣ Hänvisningar (VG)
+Dessa förbättringar gör timern ännu mer tillgänglig och pålitlig för användaren.
 
-Förbättring 1: Stöd i commit
-👉 feat(Us1-timer-start): I’ve left a few small comments about script loading, const, and one unused variable.
+---
 
-Förbättring 2: Stöd i PR
-👉 PR #2 – Jag hade två button som man kan göra en, så jag fixade den.
+## 4️⃣ Hänvisningar (VG)
+
+### 🔗 **Förbättring 1: Stöd i commit**
+👉 `feat(Us1-timer-start)`: Lade till fungerande nedräkning och visning av tid i mm:ss-format.  
+
+### 🔗 **Förbättring 2: Stöd i PR**
+👉 `PR #2 – feat/Us2-Paus/Återuppta-timern`: Fixade dubbla knappar till en enda “Starta/Pausa/Fortsätt”-knapp för bättre UX.  
+
+---
+
+## 🧩 PR Reviews
+
+**Given reviews:**  
+- Granskade kollegans PR för “feat(us1-Återställ-timern)” med fokus på kodstruktur och namnkonventioner.  
+
+**Received reviews:**  
+- Fick feedback om att förbättra knapp-logiken och göra den mer intuitiv – implementerat i US4 och US5.
+
+---
+
+## ⚔️ Konflikter
+
+En konflikt uppstod mellan brancherna  
+`feat/us5–cirkulär-design-för-timer-och-paus` och `main`  
+på grund av parallella ändringar i `index.html`.
+
+### Lösning:
+Jag löste konflikten manuellt genom att: inte behålla texten jag skriv båda 
+
+
+---
+
+✳️ **Sammanfattning:**  
+Denna sprint förbättrade både användarupplevelsen och kodstrukturen.  
+Jag har arbetat enligt agila principer med små, testbara steg och tydliga PR-processer.  
+Varje feature är isolerad, väl beskriven och länkad till sitt Trello-kort.
+
+---
